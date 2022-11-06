@@ -9,6 +9,7 @@ const refs = {
 
 let currentTime = null;
 let setTime = null;
+let intervalId = null;
 
 const options = {
   enableTime: true,
@@ -23,35 +24,34 @@ const options = {
     setTime = selectedDates[0].getTime();
 
     if (options.defaultDate.getTime() < setTime) {
-      refs.startButton.removeAttribute('disabled');
+      toggleButton();
     }
   },
 };
 
-refs.startButton.addEventListener('click', onTimerClick);
+refs.startButton.addEventListener('click', onStartClick);
 
 const date = flatpickr('input#datetime-picker', options);
 
-function onTimerClick() {
+function onStartClick() {
   Notify.success('The timer has been started');
-  disableButton();
-  const intervalId = setInterval(() => {
-    const deltaTime = findDeltaTime();
-
-    stopInterval(deltaTime, intervalId);
-
-    const convertTime = convertMs(deltaTime);
-
-    changeHtmlValues(convertTime);
-  }, 1000);
+  toggleButton();
+  intervalId = setInterval(runTimer, 1000);
 }
 
-function stopInterval(deltaTime, intervalId) {
+function toggleButton() {
+  refs.startButton.toggleAttribute('disabled');
+}
+
+function stopInterval(deltaTime) {
   if (deltaTime < 1000) clearInterval(intervalId);
 }
 
-function disableButton() {
-  refs.startButton.setAttribute('disabled', 'disabled');
+function runTimer() {
+  const deltaTime = findDeltaTime();
+  stopInterval(deltaTime);
+  const convertTime = convertMs(deltaTime);
+  changeHtmlValues(convertTime);
 }
 
 function findDeltaTime() {
