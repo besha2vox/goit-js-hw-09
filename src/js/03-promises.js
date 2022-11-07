@@ -15,7 +15,7 @@ function onButtonSubmit(e) {
 }
 
 function createPromises(delay, step) {
-  for (let i = 1; i < Number(refs.amount.value); i += 1) {
+  for (let i = 1; i <= Number(refs.amount.value); i += 1) {
     delay += i === 1 ? 0 : step;
     createPromise(i, delay).then(onSucces).catch(onError);
   }
