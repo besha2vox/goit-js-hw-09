@@ -11,12 +11,12 @@ refs.form.addEventListener('submit', onButtonSubmit);
 
 function onButtonSubmit(e) {
   e.preventDefault();
+  createPromises(Number(refs.delay.value), Number(refs.step.value));
+}
 
-  let delay = Number(refs.delay.value);
-
-  for (let i = 0; i < Number(refs.amount.value); i++) {
-    delay += Number(refs.step.value);
-    console.log('delay', delay);
+function createPromises(delay, step) {
+  for (let i = 1; i < Number(refs.amount.value); i += 1) {
+    delay += i === 1 ? 0 : step;
     createPromise(i, delay).then(onSucces).catch(onError);
   }
 }
@@ -27,9 +27,8 @@ function createPromise(position, delay) {
       const shouldResolve = Math.random() > 0.3;
       if (shouldResolve) {
         resolve({ position, delay });
-      } else {
-        reject({ position, delay });
       }
+      reject({ position, delay });
     }, delay);
   });
 }
